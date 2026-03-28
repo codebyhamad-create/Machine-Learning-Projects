@@ -1,5 +1,9 @@
 # Movie Recommendation System — MovieLens 20M
 
+## Prepared by: Hamadullah Rajpar
+
+## Before you start having a look at it make sure to know that, I have not uploaded Output folder along with Dataset Folder. They both are heavy in size that's the reason for not uploading it. In order to see them you must download the Dataset following the link given below this text and to see outputs you must run all the files in order to have them in your own pc. Thanks A lot.
+
 End-to-end recommendation engine: data prep → EDA → content-based → collaborative SVD → hybrid → Streamlit UI.
 
 **Dataset**: [MovieLens 20M](https://grouplens.org/datasets/movielens/20m/)

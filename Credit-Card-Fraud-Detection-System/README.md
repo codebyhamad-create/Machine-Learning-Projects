@@ -1,5 +1,5 @@
 # 💳 Credit Card Fraud Detection System
-
+## note: This projet is made by using Ai for practice purpose.
 > End-to-end ML pipeline for real-time fraud detection | SMOTE | Random Forest | XGBoost | SHAP | Streamlit
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue)

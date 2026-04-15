@@ -54,9 +54,7 @@ project-name/
 * Deploy projects using web frameworks
 * Integrate more diverse datasets and domains
 
-## Author
-
-Prepared by: Hamadullah Rajper
+Built with ❤️ by Hamadullah Rajpar
 
 ---
 

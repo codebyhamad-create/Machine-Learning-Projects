@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Insight Studio — Predictive Models</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* ── Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cream:     #F5F0E8;
+  --ink:       #1A1612;
+  --ink-light: #4A3F35;
+  --ink-muted: #7A6E65;
+  --gold:      #C8923A;
+  --gold-lt:   #E8C88A;
+  --gold-pale: #F5EDD8;
+  --sage:      #4A7C6F;
+  --sage-lt:   #8BB8AD;
+  --rust:      #B85C38;
+  --rust-lt:   #E8987A;
+  --bg:        #FDFAF4;
+  --card:      #FFFFFF;
+  --border:    rgba(26,22,18,0.10);
+  --border-md: rgba(26,22,18,0.18);
+  --shadow:    0 2px 20px rgba(26,22,18,0.08);
+  --shadow-lg: 0 8px 48px rgba(26,22,18,0.14);
+  --ff-serif:  'Playfair Display', Georgia, serif;
+  --ff-sans:   'DM Sans', system-ui, sans-serif;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--ff-sans);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ── Grain overlay ──────────────────────────────────────  */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ── NAV ────────────────────────────────────────────────  */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(253,250,244,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+
+.nav-logo {
+  font-family: var(--ff-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.nav-logo em { font-style: italic; color: var(--gold); }
+
+.nav-tabs { display: flex; gap: 4px; }
+
+.nav-tab {
+  font-family: var(--ff-sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.nav-tab:hover { color: var(--ink); background: var(--gold-pale); }
+.nav-tab.active {
+  color: var(--gold);
+  background: var(--gold-pale);
+  font-weight: 500;
+}
+
+/* ── HERO ───────────────────────────────────────────────  */
+.hero {
+  position: relative;
+  padding: 5rem 2.5rem 4rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-md), transparent);
+}
+
+.hero-eyebrow {
+  font-family: var(--ff-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  font-family: var(--ff-serif);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.12;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: var(--ink-muted);
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.hero-badges {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 100px;
+  border: 1px solid;
+}
+.badge-gold   { color: var(--gold);  border-color: var(--gold-lt);  background: var(--gold-pale); }
+.badge-sage   { color: var(--sage);  border-color: var(--sage-lt);  background: #EDF5F3; }
+.badge-rust   { color: var(--rust);  border-color: var(--rust-lt);  background: #FBF0EC; }
+
+/* ── SECTIONS ───────────────────────────────────────────  */
+.section { display: none; padding: 3rem 2.5rem 4rem; max-width: 1100px; margin: 0 auto; }
+.section.active { display: block; animation: fadeUp 0.4s ease both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Section header ─────────────────────────────────────  */
+.sec-header { margin-bottom: 2.5rem; }
+.sec-eyebrow {
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem;
+}
+.sec-title {
+  font-family: var(--ff-serif);
+  font-size: 2rem; font-weight: 700; line-height: 1.2;
+  color: var(--ink); letter-spacing: -0.02em;
+}
+.sec-title em { font-style: italic; color: var(--gold); }
+.sec-desc {
+  font-size: 0.95rem; color: var(--ink-muted); margin-top: 0.5rem; max-width: 600px;
+  line-height: 1.7;
+}
+
+/* ── Cards ──────────────────────────────────────────────  */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-family: var(--ff-serif);
+  font-size: 1rem; font-weight: 600;
+  color: var(--ink); margin-bottom: 1.25rem;
+}
+
+/* ── Metric chips ───────────────────────────────────────  */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.metric {
+  background: var(--gold-pale);
+  border: 1px solid rgba(200,146,58,0.2);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+.metric.sage { background: #EDF5F3; border-color: rgba(74,124,111,0.2); }
+.metric.rust { background: #FBF0EC; border-color: rgba(184,92,56,0.2); }
+
+.metric-lbl {
+  font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: 4px;
+}
+.metric-val {
+  font-family: var(--ff-serif);
+  font-size: 1.6rem; font-weight: 700;
+  color: var(--ink); line-height: 1.1;
+}
+.metric.sage .metric-val { color: var(--sage); }
+.metric.rust .metric-val { color: var(--rust); }
+
+/* ── Grid layouts ───────────────────────────────────────  */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  nav { padding: 0 1.25rem; }
+  .section { padding: 2rem 1.25rem 3rem; }
+}
+
+/* ── Chart containers ───────────────────────────────────  */
+.chart-wrap {
+  position: relative;
+  width: 100%;
+}
+
+/* ── Sliders ────────────────────────────────────────────  */
+.slider-group { margin-bottom: 1rem; }
+.slider-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 6px;
+}
+.slider-name { font-size: 0.85rem; font-weight: 500; color: var(--ink-light); }
+.slider-readout {
+  font-family: var(--ff-serif);
+  font-size: 1rem; font-weight: 600; color: var(--gold);
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%; height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--gold) var(--pct, 50%), rgba(26,22,18,0.12) var(--pct, 50%));
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 3px solid white;
+  box-shadow: 0 1px 6px rgba(200,146,58,0.4);
+  transition: transform 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+/* ── Predict panel ──────────────────────────────────────  */
+.predict-panel {
+  background: linear-gradient(135deg, var(--gold-pale) 0%, #FBF0EC 100%);
+  border: 1px solid rgba(200,146,58,0.25);
+  border-radius: 16px;
+  padding: 1.75rem;
+}
+
+.predict-panel .card-title { color: var(--gold); }
+
+.input-group { margin-bottom: 1rem; }
+.input-label { font-size: 0.8rem; font-weight: 500; color: var(--ink-muted); margin-bottom: 4px; display: block; }
+.input-field {
+  width: 100%;
+  padding: 9px 14px;
+  border: 1px solid var(--border-md);
+  border-radius: 8px;
+  font-family: var(--ff-sans);
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: white;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.input-field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,146,58,0.12); }
+
+.btn-predict {
+  width: 100%;
+  padding: 12px;
+  background: var(--ink);
+  color: var(--gold-lt);
+  font-family: var(--ff-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 1rem;
+}
+.btn-predict:hover { background: var(--gold); color: white; transform: translateY(-1px); }
+.btn-predict:active { transform: translateY(0); }
+
+.result-box {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: white;
+  border-radius: 10px;
+  border-left: 4px solid var(--gold);
+  display: none;
+}
+.result-box.show { display: block; animation: fadeUp 0.3s ease; }
+.result-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+.result-value { font-family: var(--ff-serif); font-size: 1.6rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-top: 2px; }
+
+/* ── Confusion matrix ───────────────────────────────────  */
+.conf-matrix {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-top: 1rem;
+}
+.conf-cell {
+  border-radius: 10px; padding: 1rem; text-align: center;
+}
+.conf-cell .conf-val {
+  font-family: var(--ff-serif); font-size: 2rem; font-weight: 700;
+}
+.conf-cell .conf-lbl { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+.conf-tp { background: #EDF5F3; }  .conf-tp .conf-val { color: var(--sage); } .conf-tp .conf-lbl { color: var(--sage); }
+.conf-tn { background: #EDF5F3; }  .conf-tn .conf-val { color: var(--sage); } .conf-tn .conf-lbl { color: var(--sage); }
+.conf-fp { background: #FBF0EC; }  .conf-fp .conf-val { color: var(--rust); } .conf-fp .conf-lbl { color: var(--rust); }
+.conf-fn { background: #FBF0EC; }  .conf-fn .conf-val { color: var(--rust); } .conf-fn .conf-lbl { color: var(--rust); }
+
+/* ── Insight chip ───────────────────────────────────────  */
+.insight { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; background: var(--gold-pale); border-radius: 10px; margin-bottom: 8px; }
+.insight-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 6px; }
+.insight p { font-size: 0.875rem; color: var(--ink-light); line-height: 1.5; }
+
+/* ── Recommendation UI ──────────────────────────────────  */
+.user-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.user-pill {
+  font-size: 0.82rem; font-weight: 400; padding: 6px 18px;
+  border-radius: 100px; border: 1px solid var(--border-md);
+  background: transparent; color: var(--ink-muted);
+  cursor: pointer; transition: var(--transition);
+}
+.user-pill:hover { border-color: var(--gold-lt); color: var(--gold); background: var(--gold-pale); }
+.user-pill.active { background: var(--ink); color: var(--gold-lt); border-color: var(--ink); font-weight: 500; }
+
+.movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+
+.movie-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--card);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+.movie-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.movie-card::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+.genre-sci-fi::before    { background: var(--sage); }
+.genre-action::before    { background: var(--rust); }
+.genre-romance::before   { background: #C4729E; }
+.genre-horror::before    { background: var(--ink); }
+.genre-thriller::before  { background: #7A6BAE; }
+.genre-drama::before     { background: var(--gold); }
+.genre-musical::before   { background: #4E9AC4; }
+.genre-animation::before { background: #6B9E4A; }
+
+.movie-title { font-size: 0.85rem; font-weight: 500; color: var(--ink); }
+.movie-genre { font-size: 0.72rem; color: var(--ink-muted); margin-top: 2px; }
+.movie-score {
+  font-family: var(--ff-serif);
+  font-size: 1rem; font-weight: 600; color: var(--gold);
+  margin-top: 6px;
+}
+.movie-stars { font-size: 0.75rem; color: var(--gold); margin-top: 2px; }
+
+.rated-label {
+  font-size: 0.65rem; font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--sage);
+  background: #EDF5F3; padding: 2px 6px; border-radius: 4px;
+  position: absolute; top: 8px; right: 8px;
+}
+
+/* ── Heatmap ────────────────────────────────────────────  */
+.heatmap { display: grid; gap: 3px; }
+.heatmap-row { display: flex; gap: 3px; align-items: center; }
+.heatmap-cell {
+  width: 36px; height: 36px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 500; color: white;
+  transition: var(--transition); cursor: default;
+}
+.heatmap-cell:hover { transform: scale(1.2); z-index: 10; position: relative; }
+.heatmap-label { font-size: 0.7rem; color: var(--ink-muted); width: 48px; text-align: right; padding-right: 6px; }
+
+/* ── Feature importance bar ─────────────────────────────  */
+.feat-bar-wrap { margin-bottom: 14px; }
+.feat-bar-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.feat-name { font-size: 0.85rem; color: var(--ink-light); font-weight: 400; }
+.feat-val  { font-size: 0.85rem; font-weight: 500; color: var(--gold); }
+.feat-bar-track { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.feat-bar-fill  { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── Decorative accents ─────────────────────────────────  */
+.ornament {
+  font-family: var(--ff-serif);
+  font-size: 6rem; font-weight: 700; font-style: italic;
+  color: rgba(200,146,58,0.07);
+  position: absolute; line-height: 1;
+  pointer-events: none; user-select: none;
+}
+
+/* ── Footer ─────────────────────────────────────────────  */
+footer {
+  text-align: center;
+  padding: 2.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin-top: 2rem;
+}
+footer strong { font-family: var(--ff-serif); font-style: italic; color: var(--gold); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ML <em>Insight</em> Studio</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('regression')">Regression</button>
+    <button class="nav-tab" onclick="showSection('classification')">Classification</button>
+    <button class="nav-tab" onclick="showSection('recommendation')">Recommendation</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="hero-eyebrow">Predictive Model Showcase</p>
+  <h1>Machine Learning<br><em>in Three Acts</em></h1>
+  <p class="hero-sub">Interactive exploration of regression, classification, and collaborative filtering — built from scratch with pure NumPy.</p>
+  <div class="hero-badges">
+    <span class="badge badge-gold">Linear Regression · R² 0.91</span>
+    <span class="badge badge-sage">Logistic Classifier · Acc 100%</span>
+    <span class="badge badge-rust">Collaborative Filter · 12 Movies</span>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — REGRESSION
+═══════════════════════════════════════════════════════ -->
+<section id="sec-regression" class="section active">
+  <div class="sec-header">
+    <p class="sec-eyebrow">Act I</p>
+    <h2 class="sec-title">House Price <em>Prediction</em></h2>
+    <p class="sec-desc">Ordinary Least Squares regression on synthetic housing data. Features: size, bedrooms, age. Trained on 160 samples, tested on 40.</p>
+  </div>
+
+  <div id="reg-metrics" class="metrics-row"></div>
+
+  <div class="grid-2" style="margin-bottom: 20px;">
+    <div class="card">
+      <p class="card-title">Predicted vs Actual Prices</p>
+      <div class="chart-wrap" style="height:280px">
+        <canvas id="chart-scatter" aria-label="Scatter plot comparing predicted and actual house prices"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <p class="card-title">Feature Weights</p>
+      <div id="feat-bars"></div>
+      <div style="height:160px; margin-top: 1rem;">
+        <canvas id="chart-feat" aria-label="Bar chart of feature importance weights"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="predict-panel">
+      <p class="card-title">Try a Prediction</p>
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Size (sqft)</span>
+          <span class="slider-readout" id="out-size">1500</span>
+        </div>
+        <input type="range" id="sl-size" min="500" max="3500" step="50" value="1500" oninput="updateRegSlider('size')">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Bedrooms</span>
+          <span class="slider-readout" id="out-beds">3</span>
+        </div>
+        <input type="range" id="sl-beds" min="1" max="5" step="1" value="3" oninput="updateRegSlider('beds')">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Age (years)</span>
+          <span class="slider-readout" id="out-age">10</span>
+        </div>
+        <input type="range" id="sl-age" min="0" max="40" step="1" value="10" oninput="updateRegSlider('age')">
+      </div>
+      <button class="btn-predict" onclick="predictPrice()">Predict Price</button>
+      <div class="result-box" id="reg-result">
+        <div class="result-label">Estimated Value</div>
+        <div class="result-value" id="reg-result-val">—</div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="card-title">Model Insights</p>
+      <div id="reg-insights"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — CLASSIFICATION
+═══════════════════════════════════════════════════════ -->
+<section id="sec-classification" class="section">
+  <div class="sec-header">
+    <p class="sec-eyebrow">Act II</p>
+    <h2 class="sec-title">Customer Churn <em>Classifier</em></h2>
+    <p class="sec-desc">Logistic Regression trained with gradient descent. Predicts whether a customer will churn based on tenure, charges, support calls, and contract type.</p>
+  </div>
+
+  <div id="cls-metrics" class="metrics-row"></div>
+
+  <div class="grid-2" style="margin-bottom: 20px;">
+    <div class="card">
+      <p class="card-title">ROC Curve</p>
+      <div class="chart-wrap" style="height:260px">
+        <canvas id="chart-roc" aria-label="ROC curve showing true positive rate vs false positive rate"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <p class="card-title">Confusion Matrix</p>
+      <div class="conf-matrix" id="conf-matrix"></div>
+      <div style="height:120px; margin-top:1rem;">
+        <canvas id="chart-cls-feat" aria-label="Feature weight bar chart for classification"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="predict-panel">
+      <p class="card-title">Predict Churn Risk</p>
+      <div class="slider-group">
+        <div class="slider-header"><span class="slider-name">Tenure (months)</span><span class="slider-readout" id="out-tenure">12</span></div>
+        <input type="range" id="sl-tenure" min="1" max="72" value="12" oninput="updateClsSlider()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><span class="slider-name">Monthly Charges ($)</span><span class="slider-readout" id="out-charges">70</span></div>
+        <input type="range" id="sl-charges" min="20" max="120" value="70" oninput="updateClsSlider()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><span class="slider-name">Support Calls</span><span class="slider-readout" id="out-calls">3</span></div>
+        <input type="range" id="sl-calls" min="0" max="9" value="3" oninput="updateClsSlider()">
+      </div>
+      <div class="input-group" style="margin-top:0.5rem;">
+        <label class="input-label">Contract Length</label>
+        <select class="input-field" id="sel-contract">
+          <option value="1">Monthly (1)</option>
+          <option value="12" selected>Annual (12)</option>
+          <option value="24">Two-year (24)</option>
+        </select>
+      </div>
+      <button class="btn-predict" onclick="predictChurn()">Assess Churn Risk</button>
+      <div class="result-box" id="cls-result">
+        <div class="result-label">Prediction</div>
+        <div class="result-value" id="cls-result-val">—</div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="card-title">Churn Distribution</p>
+      <div class="chart-wrap" style="height:180px">
+        <canvas id="chart-dist" aria-label="Pie chart of churn vs no churn distribution"></canvas>
+      </div>
+      <div id="cls-insights" style="margin-top:1rem;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — RECOMMENDATION
+═══════════════════════════════════════════════════════ -->
+<section id="sec-recommendation" class="section">
+  <div class="sec-header">
+    <p class="sec-eyebrow">Act III</p>
+    <h2 class="sec-title">Movie <em>Recommender</em></h2>
+    <p class="sec-desc">User-based collaborative filtering with cosine similarity. 10 users × 12 movies, 60% sparse matrix. Select a user to see their taste profile and personalised picks.</p>
+  </div>
+
+  <div id="rec-stats" class="metrics-row"></div>
+
+  <div class="user-selector" id="user-selector"></div>
+
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <p class="card-title">Rated Movies</p>
+      <div class="movie-grid" id="rated-movies"></div>
+    </div>
+    <div class="card">
+      <p class="card-title">Top Recommendations</p>
+      <div class="movie-grid" id="rec-movies"></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <p class="card-title">Recommendation Confidence Scores</p>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chart-rec" aria-label="Horizontal bar chart of recommendation scores"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <p class="card-title">User Similarity Heatmap (top 5 users)</p>
+      <div id="sim-heatmap"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>ML Insight Studio</strong> — Pure NumPy · No sklearn · Three models from scratch
+</footer>
+
+<script>
+// ── Globals ──────────────────────────────────────────────
+let REG = null, CLS = null, REC = null;
+let charts = {};
+let activeUser = 0;
+
+// ── Utility ──────────────────────────────────────────────
+function $id(id) { return document.getElementById(id); }
+
+function updateSliderBg(el) {
+  const pct = ((el.value - el.min) / (el.max - el.min) * 100).toFixed(1);
+  el.style.setProperty('--pct', pct + '%');
+}
+
+function destroyChart(key) {
+  if (charts[key]) { charts[key].destroy(); charts[key] = null; }
+}
+
+function fmtMoney(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function stars(n) {
+  const full = Math.round(n);
+  return '★'.repeat(full) + '☆'.repeat(5-full);
+}
+
+// ── Navigation ──────────────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  $id('sec-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── Load all data ────────────────────────────────────────
+async function loadAll() {
+  const [r, c, rec] = await Promise.all([
+    fetch('static/regression_data.json').then(x=>x.json()),
+    fetch('static/classification_data.json').then(x=>x.json()),
+    fetch('static/recommendation_data.json').then(x=>x.json()),
+  ]);
+  REG = r; CLS = c; REC = rec;
+  initRegression();
+  initClassification();
+  initRecommendation();
+}
+
+// ══════════════════════════════════════════════════════════
+// REGRESSION
+// ══════════════════════════════════════════════════════════
+function initRegression() {
+  const m = REG.metrics;
+
+  // Metrics
+  $id('reg-metrics').innerHTML = `
+    <div class="metric"><div class="metric-lbl">R² Score</div><div class="metric-val">${m.r2}</div></div>
+    <div class="metric sage"><div class="metric-lbl">RMSE</div><div class="metric-val">${fmtMoney(m.rmse)}</div></div>
+    <div class="metric rust"><div class="metric-lbl">MAE</div><div class="metric-val">${fmtMoney(m.mae)}</div></div>
+    <div class="metric"><div class="metric-lbl">MSE</div><div class="metric-val">${(m.mse/1e6).toFixed(0)}M</div></div>
+  `;
+
+  // Scatter
+  const sc = REG.scatter;
+  const diagonal = [Math.min(...sc.actual), Math.max(...sc.actual)];
+  destroyChart('scatter');
+  charts.scatter = new Chart($id('chart-scatter'), {
+    data: { datasets: [
+      { type:'scatter', label:'Test samples', data: sc.actual.map((a,i)=>({x:a,y:sc.predicted[i]})),
+        backgroundColor:'rgba(200,146,58,0.45)', pointRadius:5, pointHoverRadius:7 },
+      { type:'line', label:'Perfect fit', data: diagonal.map(v=>({x:v,y:v})),
+        borderColor:'rgba(74,124,111,0.7)', borderWidth:1.5, pointRadius:0, borderDash:[6,4] }
+    ]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        x:{ title:{display:true,text:'Actual Price ($)',font:{size:11,family:"'DM Sans'"}}, ticks:{callback:v=>'$'+Math.round(v/1000)+'k',font:{size:10}} },
+        y:{ title:{display:true,text:'Predicted Price ($)',font:{size:11,family:"'DM Sans'"}}, ticks:{callback:v=>'$'+Math.round(v/1000)+'k',font:{size:10}} }
+      }
+    }
+  });
+
+  // Feature bars
+  const fi = REG.feature_importance;
+  const maxW = Math.max(...fi.weights.map(Math.abs));
+  const colors = ['#C8923A','#4A7C6F','#B85C38'];
+  $id('feat-bars').innerHTML = fi.features.map((f,i)=>{
+    const pct = Math.round(Math.abs(fi.weights[i])/maxW*100);
+    return `<div class="feat-bar-wrap">
+      <div class="feat-bar-header"><span class="feat-name">${f}</span><span class="feat-val">${fi.weights[i].toFixed(4)}</span></div>
+      <div class="feat-bar-track"><div class="feat-bar-fill" style="width:${pct}%;background:${colors[i]}"></div></div>
+    </div>`;
+  }).join('');
+
+  // Feature chart
+  destroyChart('feat');
+  charts.feat = new Chart($id('chart-feat'), {
+    type:'bar',
+    data:{ labels:fi.features, datasets:[{ data:fi.weights, backgroundColor:colors, borderRadius:6 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{ticks:{font:{size:10}}},x:{ticks:{font:{size:10}}}} }
+  });
+
+  // Insights
+  $id('reg-insights').innerHTML = [
+    {t:`R² = ${m.r2} means the model explains <strong>${(m.r2*100).toFixed(1)}%</strong> of price variance.`},
+    {t:`RMSE of <strong>${fmtMoney(m.rmse)}</strong> is the typical prediction error.`},
+    {t:`<strong>Size</strong> has the highest positive weight — biggest driver of price.`},
+    {t:`<strong>Age</strong> has a negative weight — older homes predicted lower.`},
+    {t:`The diagonal line shows perfect prediction; tighter clustering = better model.`},
+  ].map(({t})=>`<div class="insight"><div class="insight-dot"></div><p>${t}</p></div>`).join('');
+
+  // Init sliders
+  ['size','beds','age'].forEach(id=>{
+    const el = $id('sl-'+id);
+    if(el) updateSliderBg(el);
+  });
+}
+
+function updateRegSlider(which) {
+  const el = $id('sl-'+which);
+  updateSliderBg(el);
+  $id('out-'+which).textContent = el.value;
+}
+
+function predictPrice() {
+  const size  = +$id('sl-size').value;
+  const beds  = +$id('sl-beds').value;
+  const age   = +$id('sl-age').value;
+  // Re-run OLS prediction using pre-computed weights
+  const fi = REG.feature_importance;
+  // Use simple linear combination (weights from model)
+  // Normalise: min [500,1,0], max [3500,5,40]
+  const mins = [500,1,0], maxs = [3500,5,40];
+  const feat = [size,beds,age];
+  const norm = feat.map((v,i)=>(v-mins[i])/(maxs[i]-mins[i]));
+  let price = REG.intercept;
+  fi.weights.forEach((w,i)=>{ price += w * norm[i]; });
+  const box = $id('reg-result');
+  $id('reg-result-val').textContent = fmtMoney(price);
+  box.classList.add('show');
+}
+
+// ══════════════════════════════════════════════════════════
+// CLASSIFICATION
+// ══════════════════════════════════════════════════════════
+function initClassification() {
+  const m = CLS.metrics;
+
+  $id('cls-metrics').innerHTML = `
+    <div class="metric sage"><div class="metric-lbl">Accuracy</div><div class="metric-val">${(m.accuracy*100).toFixed(1)}%</div></div>
+    <div class="metric"><div class="metric-lbl">Precision</div><div class="metric-val">${(m.precision*100).toFixed(1)}%</div></div>
+    <div class="metric sage"><div class="metric-lbl">Recall</div><div class="metric-val">${(m.recall*100).toFixed(1)}%</div></div>
+    <div class="metric"><div class="metric-lbl">F1 Score</div><div class="metric-val">${(m.f1*100).toFixed(1)}%</div></div>
+    <div class="metric rust"><div class="metric-lbl">AUC</div><div class="metric-val">${CLS.auc.toFixed(3)}</div></div>
+  `;
+
+  // ROC
+  const roc = CLS.roc;
+  destroyChart('roc');
+  charts.roc = new Chart($id('chart-roc'), {
+    data:{ datasets:[
+      { type:'line', label:'Model ROC', data:roc.fpr.map((x,i)=>({x,y:roc.tpr[i]})),
+        borderColor:'#C8923A', borderWidth:2.5, pointRadius:0, fill:true, backgroundColor:'rgba(200,146,58,0.08)' },
+      { type:'line', label:'Random', data:[{x:0,y:0},{x:1,y:1}],
+        borderColor:'rgba(26,22,18,0.2)', borderWidth:1.5, pointRadius:0, borderDash:[5,5] }
+    ]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{min:0,max:1, title:{display:true,text:'False Positive Rate',font:{size:11}}, ticks:{font:{size:10}}},
+        y:{min:0,max:1, title:{display:true,text:'True Positive Rate',font:{size:11}}, ticks:{font:{size:10}}}
+      }
+    }
+  });
+
+  // Confusion matrix
+  const c = CLS.confusion;
+  $id('conf-matrix').innerHTML = `
+    <div class="conf-cell conf-tp"><div class="conf-val">${c.tp}</div><div class="conf-lbl">True Positive</div></div>
+    <div class="conf-cell conf-fp"><div class="conf-val">${c.fp}</div><div class="conf-lbl">False Positive</div></div>
+    <div class="conf-cell conf-fn"><div class="conf-val">${c.fn}</div><div class="conf-lbl">False Negative</div></div>
+    <div class="conf-cell conf-tn"><div class="conf-val">${c.tn}</div><div class="conf-lbl">True Negative</div></div>
+  `;
+
+  // Feature weights
+  destroyChart('clsFeat');
+  charts.clsFeat = new Chart($id('chart-cls-feat'), {
+    type:'bar',
+    data:{ labels:CLS.feature_names.map(n=>n.split(' ')[0]), datasets:[{ data:CLS.feature_weights, backgroundColor:['#C8923A','#B85C38','#4A7C6F','#7A6BAE'], borderRadius:5 }] },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:10}}}} }
+  });
+
+  // Distribution
+  const d = CLS.class_distribution;
+  destroyChart('dist');
+  charts.dist = new Chart($id('chart-dist'), {
+    type:'doughnut',
+    data:{ labels:['Churn','No Churn'], datasets:[{ data:[d.churn,d.no_churn], backgroundColor:['#B85C38','#4A7C6F'], borderWidth:0 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{ legend:{position:'bottom',labels:{font:{family:"'DM Sans'",size:12}}} } }
+  });
+
+  $id('cls-insights').innerHTML = [
+    {t:'Support Calls is the strongest churn predictor — more calls, more likely to leave.'},
+    {t:'Long contracts (24 months) dramatically reduce churn probability.'},
+    {t:'High monthly charges with low tenure is the highest-risk combination.'},
+  ].map(({t})=>`<div class="insight"><div class="insight-dot"></div><p>${t}</p></div>`).join('');
+
+  ['tenure','charges','calls'].forEach(id => {
+    const el = $id('sl-'+id);
+    if(el) updateSliderBg(el);
+  });
+}
+
+function updateClsSlider() {
+  ['tenure','charges','calls'].forEach(id => {
+    const el = $id('sl-'+id);
+    updateSliderBg(el);
+    $id('out-'+id).textContent = el.value;
+  });
+}
+
+function sigmoid(z) { return 1/(1+Math.exp(-Math.max(-500,Math.min(500,z)))); }
+
+function predictChurn() {
+  const tenure  = +$id('sl-tenure').value;
+  const charges = +$id('sl-charges').value;
+  const calls   = +$id('sl-calls').value;
+  const contract= +$id('sel-contract').value;
+
+  // Standardise using rough training stats
+  const mus = [36.5, 70, 4.5, 12.3];
+  const sds = [20.2, 28.8, 2.8, 9.1];
+  const feat = [tenure, charges, calls, contract];
+  const norm = feat.map((v,i)=>(v-mus[i])/sds[i]);
+
+  const w = CLS.feature_weights;
+  let z = -1.0; // approx intercept
+  w.forEach((wi,i)=>{ z += wi * norm[i]; });
+  const prob = sigmoid(z);
+  const label = prob >= 0.5 ? 'Likely to Churn' : 'Likely to Stay';
+
+  const box = $id('cls-result');
+  $id('cls-result-val').textContent = `${label} (${(prob*100).toFixed(1)}%)`;
+  box.style.borderLeftColor = prob >= 0.5 ? '#B85C38' : '#4A7C6F';
+  box.classList.add('show');
+}
+
+// ══════════════════════════════════════════════════════════
+// RECOMMENDATION
+// ══════════════════════════════════════════════════════════
+function initRecommendation() {
+  const s = REC.stats;
+  $id('rec-stats').innerHTML = `
+    <div class="metric"><div class="metric-lbl">Users</div><div class="metric-val">${s.n_users}</div></div>
+    <div class="metric sage"><div class="metric-lbl">Movies</div><div class="metric-val">${s.n_movies}</div></div>
+    <div class="metric rust"><div class="metric-lbl">Sparsity</div><div class="metric-val">${(s.sparsity*100).toFixed(0)}%</div></div>
+    <div class="metric"><div class="metric-lbl">Avg Rating</div><div class="metric-val">${s.avg_rating}</div></div>
+  `;
+
+  const sel = $id('user-selector');
+  sel.innerHTML = REC.user_names.map((n,i)=>`<button class="user-pill${i===0?' active':''}" onclick="selectUser(${i})">${n}</button>`).join('');
+
+  renderUser(0);
+}
+
+function selectUser(idx) {
+  activeUser = idx;
+  document.querySelectorAll('.user-pill').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  renderUser(idx);
+}
+
+function genreClass(g) { return 'genre-'+g.replace(/[^a-z]/g,''); }
+
+function renderUser(uid) {
+  const ratings = REC.ratings[uid];
+  const recs    = REC.recommendations[uid] || [];
+
+  // Rated movies
+  const rated = REC.movies.map((m,i)=>({m,i,g:REC.genres[i],r:ratings[i]})).filter(x=>x.r>0);
+  $id('rated-movies').innerHTML = rated.map(({m,i,g,r})=>`
+    <div class="movie-card ${genreClass(g)}">
+      <span class="rated-label">Rated</span>
+      <div class="movie-title">${m}</div>
+      <div class="movie-genre">${g}</div>
+      <div class="movie-stars">${stars(r)}</div>
+    </div>`).join('');
+
+  // Recommendations
+  $id('rec-movies').innerHTML = recs.slice(0,6).map(r=>`
+    <div class="movie-card ${genreClass(r.genre)}">
+      <div class="movie-title">${r.movie}</div>
+      <div class="movie-genre">${r.genre}</div>
+      <div class="movie-score">${r.score.toFixed(2)} / 5</div>
+      <div class="movie-stars">${stars(r.score)}</div>
+    </div>`).join('');
+
+  // Rec chart
+  destroyChart('rec');
+  const topRecs = recs.slice(0,5);
+  charts.rec = new Chart($id('chart-rec'), {
+    type:'bar',
+    data:{ labels:topRecs.map(r=>r.movie), datasets:[{ data:topRecs.map(r=>r.score), backgroundColor:'#C8923A', borderRadius:6 }] },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{min:0,max:5,ticks:{font:{size:10}}}, y:{ticks:{font:{size:10}}} } }
+  });
+
+  // Similarity heatmap (this user + 4 most similar)
+  const simRow = REC.similarity[uid];
+  const sorted = simRow.map((v,i)=>({v,i})).filter(x=>x.i!==uid).sort((a,b)=>b.v-a.v).slice(0,4);
+  const userSet = [uid, ...sorted.map(x=>x.i)];
+  const hm = $id('sim-heatmap');
+  const cellPx = 36;
+
+  function simColor(v) {
+    const r=Math.round(253-v*(253-74)), g=Math.round(250-v*(250-124)), b=Math.round(244-v*(244-58));
+    return `rgb(${r},${g},${b})`;
+  }
+
+  let html = '<div class="heatmap">';
+  userSet.forEach(i=>{
+    html += `<div class="heatmap-row"><span class="heatmap-label">U${i}</span>`;
+    userSet.forEach(j=>{
+      const v = REC.similarity[i][j];
+      const textCol = v > 0.5 ? '#FFFFFF' : '#1A1612';
+      html += `<div class="heatmap-cell" style="background:${simColor(v)};color:${textCol}" title="U${i}↔U${j}: ${v.toFixed(2)}">${v.toFixed(1)}</div>`;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  hm.innerHTML = html;
+}
+
+// ── Boot ────────────────────────────────────────────────
+loadAll().catch(err => {
+  document.body.insertAdjacentHTML('afterbegin',
+    `<div style="padding:2rem;background:#FBF0EC;text-align:center;font-family:'DM Sans',sans-serif;color:#B85C38">
+      <strong>Data not found.</strong> Run the Python models first: <code>python models/regression_model.py</code> etc.
+    </div>`);
+  console.error(err);
+});
+</script>
+</body>
+</html>

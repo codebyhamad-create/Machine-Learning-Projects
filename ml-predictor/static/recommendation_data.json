@@ -1,0 +1,630 @@
+{
+  "movies": [
+    "Inception",
+    "The Dark Knight",
+    "Interstellar",
+    "Avengers",
+    "The Notebook",
+    "Pride & Prejudice",
+    "The Shining",
+    "Get Out",
+    "Parasite",
+    "Whiplash",
+    "La La Land",
+    "Toy Story"
+  ],
+  "genres": [
+    "sci-fi",
+    "action",
+    "sci-fi",
+    "action",
+    "romance",
+    "romance",
+    "horror",
+    "horror",
+    "thriller",
+    "drama",
+    "musical",
+    "animation"
+  ],
+  "user_names": [
+    "User 0",
+    "User 1",
+    "User 2",
+    "User 3",
+    "User 4",
+    "User 5",
+    "User 6",
+    "User 7",
+    "User 8",
+    "User 9"
+  ],
+  "ratings": [
+    [
+      5.0,
+      4.0,
+      5.0,
+      3.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      4.0,
+      3.0,
+      0.0,
+      0.0
+    ],
+    [
+      4.0,
+      5.0,
+      3.0,
+      5.0,
+      0.0,
+      0.0,
+      0.0,
+      3.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      5.0,
+      0.0,
+      0.0,
+      0.0,
+      4.0,
+      5.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      5.0,
+      4.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      5.0,
+      3.0,
+      4.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      5.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      3.0,
+      5.0,
+      4.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      4.0
+    ],
+    [
+      3.0,
+      5.0,
+      0.0,
+      5.0,
+      0.0,
+      0.0,
+      4.0,
+      3.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      5.0,
+      0.0,
+      4.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      4.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      4.0,
+      0.0,
+      0.0,
+      5.0,
+      5.0,
+      3.0
+    ],
+    [
+      4.0,
+      0.0,
+      4.0,
+      0.0,
+      0.0,
+      0.0,
+      3.0,
+      4.0,
+      4.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "similarity": [
+    [
+      1.0,
+      0.933,
+      1.0,
+      0.908,
+      0.964,
+      1.0,
+      0.911,
+      0.992,
+      0.996,
+      0.982
+    ],
+    [
+      0.933,
+      1.0,
+      0.0,
+      1.0,
+      0.94,
+      1.0,
+      0.994,
+      1.0,
+      0.0,
+      0.99
+    ],
+    [
+      1.0,
+      0.0,
+      1.0,
+      0.0,
+      1.0,
+      0.995,
+      0.0,
+      0.994,
+      0.995,
+      0.0
+    ],
+    [
+      0.908,
+      1.0,
+      0.0,
+      1.0,
+      1.0,
+      0.0,
+      0.99,
+      1.0,
+      1.0,
+      0.98
+    ],
+    [
+      0.964,
+      0.94,
+      1.0,
+      1.0,
+      1.0,
+      0.0,
+      0.882,
+      0.985,
+      1.0,
+      0.995
+    ],
+    [
+      1.0,
+      1.0,
+      0.995,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0,
+      0.983,
+      0.0
+    ],
+    [
+      0.911,
+      0.994,
+      0.0,
+      0.99,
+      0.882,
+      1.0,
+      1.0,
+      0.0,
+      1.0,
+      0.964
+    ],
+    [
+      0.992,
+      1.0,
+      0.994,
+      1.0,
+      0.985,
+      1.0,
+      0.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    [
+      0.996,
+      0.0,
+      0.995,
+      1.0,
+      1.0,
+      0.983,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    [
+      0.982,
+      0.99,
+      0.0,
+      0.98,
+      0.995,
+      0.0,
+      0.964,
+      1.0,
+      1.0,
+      1.0
+    ]
+  ],
+  "recommendations": {
+    "0": [
+      {
+        "movie_idx": 10,
+        "movie": "La La Land",
+        "genre": "musical",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 4,
+        "movie": "The Notebook",
+        "genre": "romance",
+        "score": 4.668
+      },
+      {
+        "movie_idx": 5,
+        "movie": "Pride & Prejudice",
+        "genre": "romance",
+        "score": 4.666
+      },
+      {
+        "movie_idx": 11,
+        "movie": "Toy Story",
+        "genre": "animation",
+        "score": 3.501
+      }
+    ],
+    "1": [
+      {
+        "movie_idx": 10,
+        "movie": "La La Land",
+        "genre": "musical",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 6,
+        "movie": "The Shining",
+        "genre": "horror",
+        "score": 4.501
+      },
+      {
+        "movie_idx": 4,
+        "movie": "The Notebook",
+        "genre": "romance",
+        "score": 4.5
+      },
+      {
+        "movie_idx": 8,
+        "movie": "Parasite",
+        "genre": "thriller",
+        "score": 4.5
+      },
+      {
+        "movie_idx": 5,
+        "movie": "Pride & Prejudice",
+        "genre": "romance",
+        "score": 4.0
+      }
+    ],
+    "2": [
+      {
+        "movie_idx": 0,
+        "movie": "Inception",
+        "genre": "sci-fi",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 2,
+        "movie": "Interstellar",
+        "genre": "sci-fi",
+        "score": 4.5
+      },
+      {
+        "movie_idx": 8,
+        "movie": "Parasite",
+        "genre": "thriller",
+        "score": 4.5
+      },
+      {
+        "movie_idx": 1,
+        "movie": "The Dark Knight",
+        "genre": "action",
+        "score": 3.5
+      },
+      {
+        "movie_idx": 11,
+        "movie": "Toy Story",
+        "genre": "animation",
+        "score": 3.5
+      }
+    ],
+    "3": [
+      {
+        "movie_idx": 3,
+        "movie": "Avengers",
+        "genre": "action",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 5,
+        "movie": "Pride & Prejudice",
+        "genre": "romance",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 10,
+        "movie": "La La Land",
+        "genre": "musical",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 9,
+        "movie": "Whiplash",
+        "genre": "drama",
+        "score": 4.667
+      },
+      {
+        "movie_idx": 0,
+        "movie": "Inception",
+        "genre": "sci-fi",
+        "score": 4.5
+      }
+    ],
+    "4": [
+      {
+        "movie_idx": 4,
+        "movie": "The Notebook",
+        "genre": "romance",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 5,
+        "movie": "Pride & Prejudice",
+        "genre": "romance",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 10,
+        "movie": "La La Land",
+        "genre": "musical",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 7,
+        "movie": "Get Out",
+        "genre": "horror",
+        "score": 4.501
+      },
+      {
+        "movie_idx": 6,
+        "movie": "The Shining",
+        "genre": "horror",
+        "score": 4.002
+      }
+    ],
+    "5": [
+      {
+        "movie_idx": 1,
+        "movie": "The Dark Knight",
+        "genre": "action",
+        "score": 4.667
+      },
+      {
+        "movie_idx": 8,
+        "movie": "Parasite",
+        "genre": "thriller",
+        "score": 4.5
+      },
+      {
+        "movie_idx": 2,
+        "movie": "Interstellar",
+        "genre": "sci-fi",
+        "score": 4.333
+      },
+      {
+        "movie_idx": 0,
+        "movie": "Inception",
+        "genre": "sci-fi",
+        "score": 4.0
+      },
+      {
+        "movie_idx": 9,
+        "movie": "Whiplash",
+        "genre": "drama",
+        "score": 3.5
+      }
+    ],
+    "6": [
+      {
+        "movie_idx": 4,
+        "movie": "The Notebook",
+        "genre": "romance",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 9,
+        "movie": "Whiplash",
+        "genre": "drama",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 10,
+        "movie": "La La Land",
+        "genre": "musical",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 5,
+        "movie": "Pride & Prejudice",
+        "genre": "romance",
+        "score": 4.5
+      },
+      {
+        "movie_idx": 8,
+        "movie": "Parasite",
+        "genre": "thriller",
+        "score": 4.0
+      }
+    ],
+    "7": [
+      {
+        "movie_idx": 1,
+        "movie": "The Dark Knight",
+        "genre": "action",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 10,
+        "movie": "La La Land",
+        "genre": "musical",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 5,
+        "movie": "Pride & Prejudice",
+        "genre": "romance",
+        "score": 4.5
+      },
+      {
+        "movie_idx": 6,
+        "movie": "The Shining",
+        "genre": "horror",
+        "score": 4.5
+      },
+      {
+        "movie_idx": 0,
+        "movie": "Inception",
+        "genre": "sci-fi",
+        "score": 4.0
+      }
+    ],
+    "8": [
+      {
+        "movie_idx": 3,
+        "movie": "Avengers",
+        "genre": "action",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 8,
+        "movie": "Parasite",
+        "genre": "thriller",
+        "score": 4.667
+      },
+      {
+        "movie_idx": 2,
+        "movie": "Interstellar",
+        "genre": "sci-fi",
+        "score": 4.333
+      },
+      {
+        "movie_idx": 0,
+        "movie": "Inception",
+        "genre": "sci-fi",
+        "score": 4.0
+      },
+      {
+        "movie_idx": 1,
+        "movie": "The Dark Knight",
+        "genre": "action",
+        "score": 4.0
+      }
+    ],
+    "9": [
+      {
+        "movie_idx": 3,
+        "movie": "Avengers",
+        "genre": "action",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 5,
+        "movie": "Pride & Prejudice",
+        "genre": "romance",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 10,
+        "movie": "La La Land",
+        "genre": "musical",
+        "score": 5.0
+      },
+      {
+        "movie_idx": 9,
+        "movie": "Whiplash",
+        "genre": "drama",
+        "score": 4.666
+      },
+      {
+        "movie_idx": 4,
+        "movie": "The Notebook",
+        "genre": "romance",
+        "score": 4.0
+      }
+    ]
+  },
+  "stats": {
+    "rated_items": 48,
+    "unrated_items": 72,
+    "avg_rating": 4.188,
+    "sparsity": 0.6,
+    "n_users": 10,
+    "n_movies": 12
+  }
+}

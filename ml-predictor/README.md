@@ -85,4 +85,4 @@ No pandas, no sklearn, no scipy. Pure NumPy throughout.
 
 ---
 
-*Built for class presentation — COMP/ML module*
+Built with ❤️ by Hamadullah Rajpar
